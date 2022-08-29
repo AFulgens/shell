@@ -1,0 +1,417 @@
+#!/bin/sh
+
+# Testing Rule 0
+
+### NEGATIVE empty message
+echo "" > tester
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 80 ]]; then
+	echo "FAIL: Rule 0: empty message"
+	echo -e "\tExit code is ${exit_code} instead of 80"
+else
+	echo "OK: Rule 0: empty message"
+fi
+
+### NEGATIVE "no message"
+echo "no message" > tester
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 80 ]]; then
+	echo "FAIL: Rule 0: no message as message"
+	echo -e "\tExit code is ${exit_code} instead of 80"
+else
+	echo "OK: Rule 0: no message as message"
+fi
+
+### POSITIVE there is a message
+echo "commit message" > tester
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 0: any message"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 0: any message"
+fi
+
+# Testing Rule 1
+
+### NEGATIVE no empty line between subject and body
+cat <<EOF > tester
+Subject
+Body line 1
+EOF
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 81 ]]; then
+	echo "FAIL: Rule 1: no empty line"
+	echo -e "\tExit code is ${exit_code} instead of 81"
+else
+	echo "OK: Rule 1: no empty line"
+fi
+
+### POSITIVE empty line between subject and body
+cat <<EOF > tester
+Subject
+
+Body line 1
+EOF
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 1: empty line"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 1: empty line"
+fi
+
+# Testing Rule 2
+
+### NEGATIVE subject is longer than 50
+echo "123456789012345678901234567890123456789012345678901" > tester
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 82 ]]; then
+	echo "FAIL: Rule 2: longer than 50"
+	echo -e "\tExit code is ${exit_code} instead of 82"
+else
+	echo "OK: Rule 2: longer than 50"
+fi
+
+### POSITIVE subject is shorter than or equals 50
+echo "12345678901234567890123456789012345678901234567890" > tester
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 2: equals 50"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 2: equals 50"
+fi
+
+echo "1234567890123456789012345678901234567890123456789" > tester
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 2: shorter than 50"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 2: shorter than 50"
+fi
+
+### NEGATIVE subject is longer than variable
+echo "1234567890" > tester
+export COMMIT_SUBJECT_LINE_LENGTH=9
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 82 ]]; then
+	echo "FAIL: Rule 2: longer than 9"
+	echo -e "\tExit code is ${exit_code} instead of 82"
+else
+	echo "OK: Rule 2: longer than 9"
+fi
+unset COMMIT_SUBJECT_LINE_LENGTH
+
+echo "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901" > tester
+export COMMIT_SUBJECT_LINE_LENGTH=100
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 82 ]]; then
+	echo "FAIL: Rule 2: longer than 100"
+	echo -e "\tExit code is ${exit_code} instead of 82"
+else
+	echo "OK: Rule 2: longer than 100"
+fi
+unset COMMIT_SUBJECT_LINE_LENGTH
+
+### POSITIVE subject is shorter than or equals variable
+echo "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" > tester
+export COMMIT_SUBJECT_LINE_LENGTH=100
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 2: equals 100"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 2: equals 100"
+fi
+unset COMMIT_SUBJECT_LINE_LENGTH
+
+echo "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" > tester
+export COMMIT_SUBJECT_LINE_LENGTH=100
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 2: shorter than 100"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 2: shorter than 100"
+fi
+unset COMMIT_SUBJECT_LINE_LENGTH
+
+# Testing Rule 4
+
+### NEGATIVE subject line ends with period
+echo "commit message." > tester
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 84 ]]; then
+	echo "FAIL: Rule 4: with period without body"
+	echo -e "\tExit code is ${exit_code} instead of 84"
+else
+	echo "OK: Rule 4: with period without body"
+fi
+
+cat <<EOF > tester
+Subject.
+
+Body.
+EOF
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 84 ]]; then
+	echo "FAIL: Rule 4: with period with body"
+	echo -e "\tExit code is ${exit_code} instead of 84"
+else
+	echo "OK: Rule 4: with period with body"
+fi
+
+### POSITIVE subject line does not end with period
+echo "commit message" > tester
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 4: without period without body"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 4: without period without body"
+fi
+
+cat <<EOF > tester
+Subject
+
+Body.
+EOF
+../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 4: without period with body"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 4: without period with body"
+fi
+
+# Testing Rule 6
+
+### NEGATIVE body line(s) longer than 81
+cat <<EOF > tester
+Subject
+
+Body line 0001:6789012345678901234567890123456789012345678901234567890123
+Body line 0002:6789012345678901234567890123456789012345678901234567890123
+Body line 0003:6789012345678901234567890123456789012345678901234567890123
+EOF
+../global-git-hooks/commit-msg "../tests/tester" > ./output
+exit_code=$?
+test_ok=1
+if [[ ${exit_code} -ne 86 ]]; then
+	echo "FAIL: Rule 6: multiple lines longer"
+	echo -e "\tExit code is ${exit_code} instead of 86"
+	test_ok=0
+fi
+contains=$(grep "currently line 1" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: multiple lines longer"
+	echo -e "\tOutput does not contains first line number breaking the rule twice"
+	test_ok=0
+fi
+contains=$(grep "Body line 0001:6789012345678901234567890123456789012345678901234567890123" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: multiple lines longer"
+	echo -e "\tOutput does not contains first line breaking the rule twice"
+	test_ok=0
+fi
+if [[ ${test_ok} -eq 1 ]]; then
+	echo "OK: Rule 6: multiple lines longer"
+fi
+
+cat <<EOF > tester
+Subject
+
+Body line 0001:6789012345678901234567890123456789012345678901234567890123
+Body line 0002:678901234567890123456789012345678901234567890123456789012
+Body line 0003:678901234567890123456789012345678901234567890123456789012
+EOF
+../global-git-hooks/commit-msg "../tests/tester" > ./output
+exit_code=$?
+test_ok=1
+if [[ ${exit_code} -ne 86 ]]; then
+	echo "FAIL: Rule 6: first line longer"
+	echo -e "\tExit code is ${exit_code} instead of 86"
+	test_ok=0
+fi
+contains=$(grep "currently line 1" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: multiple lines longer"
+	echo -e "\tOutput does not contains first line number breaking the rule twice"
+	test_ok=0
+fi
+contains=$(grep "Body line 0001:6789012345678901234567890123456789012345678901234567890123" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: multiple lines longer"
+	echo -e "\tOutput does not contains first line breaking the rule twice"
+fi
+if [[ ${test_ok} -eq 1 ]]; then
+	echo "OK: Rule 6: first line longer"
+fi
+
+cat <<EOF > tester
+Subject
+
+Body line 0001:678901234567890123456789012345678901234567890123456789012
+Body line 0002:6789012345678901234567890123456789012345678901234567890123
+Body line 0003:678901234567890123456789012345678901234567890123456789012
+EOF
+../global-git-hooks/commit-msg "../tests/tester" > ./output
+exit_code=$?
+test_ok=1
+if [[ ${exit_code} -ne 86 ]]; then
+	echo "FAIL: Rule 6: second line longer"
+	echo -e "\tExit code is ${exit_code} instead of 86"
+	test_ok=0
+fi
+contains=$(grep "currently line 2" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: second lines longer"
+	echo -e "\tOutput does not contains first line number breaking the rule twice"
+	test_ok=0
+fi
+contains=$(grep "Body line 0002:6789012345678901234567890123456789012345678901234567890123" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: second line longer"
+	echo -e "\tOutput does not contains first line breaking the rule twice"
+	test_ok=0
+fi
+if [[ ${test_ok} -eq 1 ]]; then
+	echo "OK: Rule 6: second line longer"
+fi
+
+cat <<EOF > tester
+Subject
+
+Body line 0001:678901234567890123456789012345678901234567890123456789012
+Body line 0002:678901234567890123456789012345678901234567890123456789012
+Body line 0003:6789012345678901234567890123456789012345678901234567890123
+EOF
+../global-git-hooks/commit-msg "../tests/tester" > ./output
+exit_code=$?
+test_ok=1
+if [[ ${exit_code} -ne 86 ]]; then
+	echo "FAIL: Rule 6: last line longer"
+	echo -e "\tExit code is ${exit_code} instead of 86"
+	test_ok=0
+fi
+contains=$(grep "currently line 3" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: last lines longer"
+	echo -e "\tOutput does not contains first line number breaking the rule twice"
+	test_ok=0
+fi
+contains=$(grep "Body line 0003:6789012345678901234567890123456789012345678901234567890123" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: last line longer"
+	echo -e "\tOutput does not contains first line breaking the rule twice"
+	test_ok=0
+fi
+if [[ ${test_ok} -eq 1 ]]; then
+	echo "OK: Rule 6: last line longer"
+fi
+
+### NEGATIVE body line(s) longer than variable
+cat <<EOF > tester
+Subject
+
+Body line 0001:6789
+Body line 0002:67890
+EOF
+export COMMIT_BODY_LINE_LENGTH=19
+../global-git-hooks/commit-msg "../tests/tester" > ./output
+exit_code=$?
+test_ok=1
+if [[ ${exit_code} -ne 86 ]]; then
+	echo "FAIL: Rule 6: lines longer than variable"
+	echo -e "\tExit code is ${exit_code} instead of 86"
+	test_ok=0
+fi
+contains=$(grep "currently line 2" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: multiple lines longer"
+	echo -e "\tOutput does not contains first line number breaking the rule twice"
+	test_ok=0
+fi
+contains=$(grep "Body line 0002:67890" output | wc -l)
+if [[ $contains -ne 2 ]]; then
+	echo "FAIL: Rule 6: last line longer"
+	echo -e "\tOutput does not contains first line breaking the rule twice"
+	test_ok=0
+fi
+if [[ ${test_ok} -eq 1 ]]; then
+	echo "OK: Rule 6: lines longer than variable"
+fi
+unset COMMIT_BODY_LINE_LENGTH
+
+
+### POSITIVE body line(s) not longer than 72
+cat <<EOF > tester
+Subject
+
+Body line 0001:678901234567890123456789012345678901234567890123456789012
+Body line 0002:67890123456789012345678901234567890123456789012345678901
+EOF
+../global-git-hooks/commit-msg "../tests/tester" > ./output
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 6: lines not longer than 72"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 6: lines not longer than 72"
+fi
+
+### POSITIVE body line(s) not longer than variable
+cat <<EOF > tester
+Subject
+
+Body line 0001:6789
+Body line 0002:67890
+EOF
+export COMMIT_BODY_LINE_LENGTH=20
+../global-git-hooks/commit-msg "../tests/tester" > ./output
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 6: lines not longer than variable"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 6: lines not longer than variable"
+fi
+unset COMMIT_BODY_LINE_LENGTH
+
+cat <<EOF > tester
+Subject
+
+Body line 0001:6789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+Body line 0002:67890
+EOF
+export COMMIT_BODY_LINE_LENGTH=100
+../global-git-hooks/commit-msg "../tests/tester" > ./output
+exit_code=$?
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: Rule 6: lines not longer than variable"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: Rule 6: lines not longer than variable"
+fi
+unset COMMIT_BODY_LINE_LENGTH
+
+rm ./tester
+rm ./output

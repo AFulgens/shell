@@ -1,0 +1,331 @@
+#!/bin/sh
+
+# Setup
+
+safecrlf=$(git config --local --get core.safecrlf)
+git config --local core.safecrlf false
+
+# Testing UTF-8 BOM
+
+printf '\xef\xbb\xbf' > tester
+echo "Beförę ŧhis text þere iß an UTF-8 ★ΒOM㆘㆒㆝" >> tester
+export COMMIT_ALLOW_UTF8_BOM=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: UTF-8 BOM allowed"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: UTF-8 BOM allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_UTF8_BOM
+
+printf '\xef\xbb\xbf' > tester
+echo "Beförę ŧhis text þere iß an UTF-8 ★ΒOM㆘㆒㆝" >> tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 64 ]]; then
+	echo "FAIL: UTF-8 BOM not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 64"
+else
+	echo "OK: UTF-8 BOM not allowed"
+fi
+git reset -- tester >/dev/null
+
+# Testing UTF-16 BOMs
+
+printf '\xfe\xff' > tester
+echo "Beförę ŧhis text þere iß an UTF-16 (big-endian) ★★ΒOM㆘㆒㆝" >> tester
+export COMMIT_ALLOW_UTF16_BOM=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: UTF-16 (BE) BOM allowed"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: UTF-16 (BE) BOM allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_UTF16_BOM
+
+printf '\xfe\xff' > tester
+echo "Beförę ŧhis text þere iß an UTF-16 (big-endian) ★★ΒOM㆘㆒㆝" >> tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 65 ]]; then
+	echo "FAIL: UTF-16 (BE) BOM not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 65"
+else
+	echo "OK: UTF-16 (BE) BOM not allowed"
+fi
+git reset -- tester >/dev/null
+
+printf '\xff\xfe' > tester
+echo "Beförę ŧhis text þere iß an UTF-16 (little-endian) ★★ΒOM㆘㆒㆝" >> tester
+export COMMIT_ALLOW_UTF16_BOM=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: UTF-16 (LE) BOM allowed"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: UTF-16 (LE) BOM allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_UTF16_BOM
+
+printf '\xff\xfe' > tester
+echo "Beförę ŧhis text þere iß an UTF-16 (little-endian) ★★ΒOM㆘㆒㆝" >> tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 65 ]]; then
+	echo "FAIL: UTF-16 (LE) BOM not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 65"
+else
+	echo "OK: UTF-16 (LE) BOM not allowed"
+fi
+git reset -- tester >/dev/null
+
+# Testing UTF-132 BOMs
+
+printf '\x00\x00\xfe\xff' > tester
+echo "Beförę ŧhis text þere iß an UTF-32 (big-endian) ★★ΒOM㆘㆒㆝" >> tester
+export COMMIT_ALLOW_UTF32_BOM=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: UTF-32 (BE) BOM allowed"
+	echo -e "\tExit code is ${exit_code} instead of"
+else
+	echo "OK: UTF-32 (BE) BOM allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_UTF32_BOM
+
+printf '\x00\x00\xfe\xff' > tester
+echo "Beförę ŧhis text þere iß an UTF-32 (big-endian) ★★ΒOM㆘㆒㆝" >> tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 66 ]]; then
+	echo "FAIL: UTF-32 (BE) BOM not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 66"
+else
+	echo "OK: UTF-32 (BE) BOM not allowed"
+fi
+git reset -- tester >/dev/null
+
+printf '\xff\xfe\x00\x00' > tester
+echo "Beförę ŧhis text þere iß an UTF-32 (little-endian) ★★ΒOM㆘㆒㆝" >> tester
+export COMMIT_ALLOW_UTF32_BOM=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: UTF-32 (LE) BOM allowed"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: UTF-32 (LE) BOM allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_UTF32_BOM
+
+printf '\xff\xfe\x00\x00' > tester
+echo "Beförę ŧhis text þere iß an UTF-32 (little-endian) ★★ΒOM㆘㆒㆝" >> tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 66 ]]; then
+	echo "FAIL: UTF-32 (LE) BOM not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 66"
+else
+	echo "OK: UTF-32 (LE) BOM not allowed"
+fi
+git reset -- tester >/dev/null
+
+# Testing No BOMs
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" > tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: No BOM"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: No BOM"
+fi
+git reset -- tester >/dev/null
+
+# Testing FIXME tag
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" > tester
+echo "// FIXME: replace text by tëxtū" >> tester
+export COMMIT_ALLOW_FIXME=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: FIXME allowed"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: FIXME allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_FIXME
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" > tester
+echo "// FIXME: replace text by tëxtū" >> tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 67 ]]; then
+	echo "FAIL: FIXME not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 67"
+else
+	echo "OK: FIXME not allowed"
+fi
+git reset -- tester >/dev/null
+
+# Testing TODO tag
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" > tester
+echo "// TODO: replace text by tëxtū" >> tester
+export COMMIT_ALLOW_TODO=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: TODO allowed"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: TODO allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_TODO
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" > tester
+echo "// TODO: replace text by tëxtū" >> tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 68 ]]; then
+	echo "FAIL: TODO not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 68"
+else
+	echo "OK: TODO not allowed"
+fi
+git reset -- tester >/dev/null
+
+# Testing XXX tag
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" > tester
+echo "// XXX: replace text by tëxtū" >> tester
+export COMMIT_ALLOW_XXX=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: XXX allowed"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: XXX allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_XXX
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" > tester
+echo "// XXX: replace text by tëxtū" >> tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 69 ]]; then
+	echo "FAIL: XXX not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 69"
+else
+	echo "OK: XXX not allowed"
+fi
+git reset -- tester >/dev/null
+
+# Test binary file
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" | gzip > tester
+export COMMIT_ALLOW_BINARY=1
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 0 ]]; then
+	echo "FAIL: binary allowed"
+	echo -e "\tExit code is ${exit_code} instead of 0"
+else
+	echo "OK: binary allowed"
+fi
+git reset -- tester >/dev/null
+unset COMMIT_ALLOW_BINARY
+
+echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" | gzip > tester
+git add tester >/dev/null
+pushd .. >/dev/null
+global-git-hooks/pre-commit "../tests/tester" >/dev/null
+exit_code=$?
+popd >/dev/null
+if [[ ${exit_code} -ne 70 ]]; then
+	echo "FAIL: binary not allowed"
+	echo -e "\tExit code is ${exit_code} instead of 70"
+else
+	echo "OK: binary not allowed"
+fi
+git reset -- tester >/dev/null
+
+# Unsetup
+
+if [[ -z ${safecrlf} ]]; then
+	git config --local --unset core.safecrlf >/dev/null
+else
+	git config --local core.safecrlf ${global_safecrlf} >/dev/null
+fi
+rm ./tester

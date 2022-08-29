@@ -1,0 +1,66 @@
+#!/bin/sh
+
+# Prefix commit message based on current branch and make the commit message properly cased (cf. Rule 3 in commit-msg).
+# The prefixes and branch-naming convention is based on git flow.
+# Cf. https://nvie.com/posts/a-successful-git-branching-model/
+#
+# Basically we expect branch names according to the regex:
+#   (feature|bugfix|hotfix|release)/[A-Z]+-[0-9]+(-.*)?
+# i.e., a prefix of "feature/", "bugfix/", "hotfix/", "release/"
+#       and then PREFIX-123
+#          (where prefix is e.g., your JIRA project-name, 123 is the ticket number currently worked on)
+#       and -optional-human-readable-description
+# getting together into a full branch name of
+#       feature/TEST-123-this-is-a-test-ticket
+# And in this case all your commit messages will be prefixed with
+#       "TEST-123: " (without quotes)
+#
+# If the branch has no corresponding ticket NOTICKET is expected.
+#
+# This script handles duplicate prefixes, i.e., in case your commit message alread starts with
+# "TEST-123: ", it will not be added again.
+#
+# Release branches are expected to have no tickets but a version number instead.
+#
+# In case commits are done on other branches (main, develop, master, or any ephemeral branch like backup),
+# then no automated prefixing happens through this hook.
+
+SCRIPTPATH="$( cd "$(dirname "${0}")" ; pwd -P )"
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+infix="$(echo "${current_branch}" | cut -d'/' -f2 | cut -d'-' -f1-2)"
+if [[ "${infix}" =~ ^NOTICKET.*$ ]]; then
+	infix="NOTICKET"
+fi
+if [[ "${current_branch}" =~ ^(feature|bugfix|hotfix|release).*$ ]]; then
+	if [[ ! "${current_branch}" =~ ^(feature|bugfix|hotfix)/(NOTICKET|[A-Z]+-[0-9]+)(-.*)?$ ]] && [[ ! "${current_branch}" =~ ^release/([0-9]+\.)*[0-9]+(-.*)?$ ]]; then
+		sh ${SCRIPTPATH}/reject "Commit cannot be prefixed, because branch name is in unexpected format: ${current_branch}"
+		exit 96
+	fi
+else
+	return 0 2>/dev/null || exit 0 # we want to prefix only "known" branch names
+fi
+
+original_commit_message=$(cat ${1})
+sentence_case="$(tr '[:lower:]' '[:upper:]' <<< ${original_commit_message:0:1})${original_commit_message:1}"
+
+if [[ "${current_branch}" == feature/* ]] && [[ ! ${original_commit_message} =~ ${infix}:\ .* ]]; then
+	echo "$(echo ${infix}): $sentence_case" > ${1} # feature/TICKET-123 -> TICKET-123: <message>
+	return 0 2>/dev/null || exit 0
+fi
+
+if [[ "${current_branch}" == bugfix/* ]] && [[ ! ${original_commit_message} =~ ${infix}\ \(bugfix\):\ .* ]]; then
+	echo "$(echo ${infix}) (bugfix): $sentence_case" > ${1} # bugfix/TICKET-123 -> TICKET-123 (bugfix): <message>
+	return 0 2>/dev/null || exit 0
+fi
+
+if [[ "${current_branch}" == hotfix/* ]] && [[ ! ${original_commit_message} =~ ${infix}\ \(hotfix\):\ .* ]]; then
+	echo "$(echo ${infix}) (hotfix): $sentence_case" > ${1} # hotfix/TICKET-123 -> TICKET-123 (hotfix): <message>
+	return 0 2>/dev/null || exit 0
+fi
+
+if [[ "${current_branch}" == release/* ]] && [[ ! ${original_commit_message} =~ release\ ${infix}:\ .* ]]; then
+	echo "release $(echo ${infix}): $sentence_case" > ${1} # release/1.2.3 -> release 1.2.3: <message>
+	return 0 2>/dev/null || exit 0
+fi

@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# Based on https://cbea.ms/git-commit/
+
+# exit status-block: [80-95]
+
+SCRIPTPATH="$( cd "$(dirname "${0}")" ; pwd -P )"
+
+# Rule 0: There must be a commit message
+commit_message=$(cat ${1} | head -n1 | cut -d':' -f2)
+if [[ ! -n "${commit_message// /}" || "${commit_message}" = "no message" ]]; then
+	sh ${SCRIPTPATH}/reject "There must be a commit message"
+	exit 80
+fi
+
+# Rule 1: Separate the subject line and the body with an empty line
+commit_message=$(cat "${1}" | wc -l)
+echo $commit_message
+if [[ ${commit_message} -gt 1 ]]; then
+	commit_message=$(cat "${1}" | head -n 2 | tail -n 1)
+	if [[ ! "${commit_message}" =~ ^$ ]]; then
+		sh ${SCRIPTPATH}/reject "The subject line and the body must be separated by an empty line"
+		exit 81
+	fi
+fi
+
+
+# Rule 2: Subject line is limited to 50 characters
+# -> can be relaxed via variable
+commit_message=$(cat "${1}" | head -n 1)
+if [[ ${#commit_message} -gt ${COMMIT_SUBJECT_LINE_LENGTH:-50} ]]; then
+	sh ${SCRIPTPATH}/reject "Subject line is limited to ${COMMIT_SUBJECT_LINE_LENGTH:-50} characters; currently it is ${#commit_message}; ${commit_message}"
+	exit 82
+fi
+
+# Rule 3: Capitalize the subject line
+# -> done automatically via the prepare-commit-msg hook
+# exit code 83 reserved
+
+# Rule 4: Do not end the subject line with a period
+commit_message=$(cat "${1}" | head -n 1)
+if [[ "${commit_message}" =~ \.$ ]]; then
+	sh ${SCRIPTPATH}/reject "Do not end the subject line with a period."
+	exit 84
+fi
+
+# Rule 5: Use imperative mood in the subject line
+# -> NOT CHECKED, would need NLP
+# exit code 85 reserved
+
+# Rule 6: Wrap the lines of the body at 72 characters
+# -> can be relaxed via variable
+commit_message=$(cat "${1}" | wc -l)
+line_counter=0
+if [[ ${commit_message} -gt 1 ]]; then
+	while read line; do
+		line_counter=$((line_counter+1))
+		if [[ ${line_counter} -gt 2 && ${#line} -gt ${COMMIT_BODY_LINE_LENGTH:-72} ]]; then
+			sh ${SCRIPTPATH}/reject "Wrap the lines of the message body at ${COMMIT_BODY_LINE_LENGTH:-72} character; currently line $((line_counter-2)) has ${#line}\nThe line is: ${line}"
+			exit 86
+		fi
+	done < "${1}"
+fi
+
+# Rule 7: Use the body to explain what and why vs. how
+# -> NOT CHECKED, would need advanced NLP
+# exit code 87 reserved

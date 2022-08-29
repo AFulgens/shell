@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# Based on experience
+
+# exit status-block: [64-79]
+
+SCRIPTPATH="$( cd "$(dirname "${0}")" ; pwd -P )"
+
+# cf. https://www.unicode.org/faq/utf_bom.html#BOM
+has_bom_utf8()  { hexdump -n 3 -C "${1}" | grep -q  'ef bb bf'                 ; }
+has_bom_utf16() { hexdump -n 2 -C "${1}" | grep -Eq '(fe ff|ff fe)'            ; }
+has_bom_utf32() { hexdump -n 4 -C "${1}" | grep -Eq '(00 00 fe ff|ff fe 00 00)'; }
+
+has_fixme() { grep -i "FIXME" "${1}"; }
+has_todo()  { grep -i "TODO"  "${1}"; }
+has_xxx()   { grep -i "XXX"   "${1}"; }
+
+# Check each file in the commit
+git diff --cached --name-status | while read status file; do
+	# Reject files with any kind of UTF-BOM
+	## Note: check in "reserve" order, because the UTF-16 BOM (LE) is a prefix of the UTF-32 BOM (LE)
+	if [[ -z ${!COMMIT_ALLOW_UTF32_BOM+x} ]] && has_bom_utf32 "${file}"; then
+		sh ${SCRIPTPATH}/reject "UTF-32 BOMs are forbidden, please remove it from ${file}"
+		exit 66
+	fi
+	if [[ -z ${!COMMIT_ALLOW_UTF16_BOM+x} ]] && has_bom_utf16 "${file}"; then
+		if ! has_bom_utf32 "${file}"; then # either caught already or should be allowed
+			sh ${SCRIPTPATH}/reject "UTF-16 BOMs are forbidden, please remove it from ${file}"
+			exit 65
+		fi
+	fi
+	if [[ -z ${!COMMIT_ALLOW_UTF8_BOM+x} ]] && has_bom_utf8 "${file}"; then
+		sh ${SCRIPTPATH}/reject "UTF-8 BOMs are forbidden, please remove it from ${file}"
+		exit 64
+	fi 
+
+	# Reject files containing widely used task tags
+	if [[ -z ${!COMMIT_ALLOW_FIXME+x} ]] && has_fixme "${file}"; then
+		sh ${SCRIPTPATH}/reject "FIXME tags are forbidden, please remove it from ${file}"
+		exit 67
+	fi
+	if [[ -z ${!COMMIT_ALLOW_TODO+x} ]] && has_todo "${file}"; then
+		sh ${SCRIPTPATH}/reject "TODO tags are forbidden, please remove it from ${file}"
+		exit 68
+	fi
+	if [[ -z ${!COMMIT_ALLOW_XXX+x} ]] && has_xxx "${file}"; then
+		sh ${SCRIPTPATH}/reject "XXX tags are forbidden, please remove it from ${file}"
+		exit 69 # this is purely by luck, honestly, I didn't even notice until I've written the tests
+	fi
+
+	# Reject non-text file (even though there is now Git-LFS, git is not meant for binary files)
+	if [[ -z ${!COMMIT_ALLOW_BINARY+x} ]] && [[ ! $(file ${file}) =~ .*text.* ]]; then
+		sh ${SCRIPTPATH}/reject "Non-text files should not be commited, this file seems to be non-text: ${file}"
+		exit 70
+	fi
+done

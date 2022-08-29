@@ -1,0 +1,89 @@
+#!/bin/sh
+
+base_branch=$(git rev-parse --abbrev-ref HEAD)
+
+function test_no_prefixing() {
+	git checkout -qb ${1}
+	echo "commit message" > ./tester
+	../global-git-hooks/prepare-commit-msg ./tester >/dev/null
+	exit_code=$?
+	if [[ ${exit_code} -ne ${2} ]]; then
+		echo "FAIL: ${3}"
+		echo -e "\tExit code is ${exit_code} instead of ${2}"
+	else
+		echo "OK: ${3}"
+	fi
+	git checkout -q ${base_branch}
+	git branch -qd ${1}
+}
+
+function test_prefixing() {
+	git checkout -qb ${1}
+	echo "commit message" > ./tester
+	../global-git-hooks/prepare-commit-msg ./tester >/dev/null
+	exit_code=$?
+	if [[ ${exit_code} -ne 0 ]]; then
+		echo "FAIL: ${2}"
+		echo -e "\tExit code is ${exit_code} instead of 0"
+	else
+		echo "OK: ${2}"
+	fi
+	output=$(cat ./tester)
+	if [[ ! "${output}" =~ "${3}Commit message" ]]; then
+		echo "FAIL: ${2}"
+		echo -e "\tOutput is '${output}' instead of '${3}Commit message'"
+	fi
+	git checkout -q ${base_branch}
+	git branch -qd ${1}
+}
+
+function test_doubly_prefixing() {
+	git checkout -qb ${1}
+	echo "${3}Commit message" > ./tester
+	../global-git-hooks/prepare-commit-msg ./tester >/dev/null
+	exit_code=$?
+	if [[ ${exit_code} -ne 0 ]]; then
+		echo "FAIL: ${2}"
+		echo -e "\tExit code is ${exit_code} instead of 0"
+	else
+		echo "OK: ${2}"
+	fi
+	output=$(cat ./tester)
+	if [[ ! "${output}" =~ "${3}Commit message" ]]; then
+		echo "FAIL: ${2}"
+		echo -e "\tOutput is '${output}' instead of '${3}Commit message'"
+	fi
+	git checkout -q ${base_branch}
+	git branch -qd ${1}
+}
+
+# Test unknown branch name
+
+test_no_prefixing "bf/whatever-123a" 0 "Unknown branch name"
+
+# Test illformatted branch names
+
+test_no_prefixing "feature/ABC-123a" 96 "Illformatted branch name: feature/ABC-123a"
+test_no_prefixing "hotfix/123-ABC" 96 "Illformatted branch name: hotfix/123-ABC"
+
+# Test prefixing
+test_prefixing "feature/NOTICKET" "Prefixing feature branch with NOTICKET" "NOTICKET: "
+test_prefixing "bugfix/NOTICKET" "Prefixing bugfix branch with NOTICKET" "NOTICKET (bugfix): "
+test_prefixing "hotfix/NOTICKET" "Prefixing hotfix branch with NOTICKET" "NOTICKET (hotfix): "
+
+test_prefixing "feature/ABC-123" "Prefixing feature branch commits" "ABC-123: "
+test_prefixing "bugfix/XYZ-987654" "Prefixing bugfix branch commits" "XYZ-987654 (bugfix): "
+test_prefixing "hotfix/JIRA-1357" "Prefixing hotfix branch commits" "JIRA-1357 (hotfix): "
+test_prefixing "release/1.2.3" "Prefixing release branch commits" "release 1.2.3: "
+
+# Test doubly-prefixing
+test_doubly_prefixing "feautre/NOTICKET" "Prefixing doubly feature branch with NOTICKET" "NOTICKET: "
+test_doubly_prefixing "bugfix/NOTICKET" "Prefixing doubly bugfix branch with NOTICKET" "NOTICKET (bugfix): "
+test_doubly_prefixing "hotfix/NOTICKET" "Prefixing doubly hotfix branch with NOTICKET" "NOTICKET (hotfix): "
+
+test_doubly_prefixing "feature/ABC-123" "Prefixing doubly feature branch commits" "ABC-123: "
+test_doubly_prefixing "bugfix/XYZ-987654" "Prefixing doubly bugfix branch commits" "XYZ-987654 (bugfix): "
+test_doubly_prefixing "hotfix/JIRA-1357" "Prefixing doubly hotfix branch commits" "JIRA-1357 (hotfix): "
+test_doubly_prefixing "release/1.2.3" "Prefixing doubly release branch commits" "release 1.2.3: "
+
+rm ./tester
