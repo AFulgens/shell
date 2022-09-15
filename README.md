@@ -66,6 +66,21 @@ There is also a helper script `reject` -- with the help of Dot Matrix, we can re
 The control variables have to be _set_ (declaration is not enough), but their value is unused.  
 You can thus use any value you see fit (`1` is used in tests), and can use _unset_ in case you want to remove the "flag".
 
+# Open TODOs
+
+* Extend this README.md with:
+  * Rationale
+  * Setup (for Cygwin)
+* Write README.md in rc-shellmagick.d
+* Do proper setup and testing on MingW
+* Do proper setup and testing on Darwin
+* Do proper setup and testing on a native Linux command line
+* Do proper setup and testing on WSL2
+* MAVEN_DEBUG_PORT=8000
+* MAVEN_SETTINGS_FILE...
+* Check all `if`s so that there are no naked `if`s...
+* Check all paths for cygpath (mingw? darwin? etc.)
+
 # Appendix A: About exit codes
 
 Why not just use `0` or `1` but some weird exit codes? Cf. https://tldp.org/LDP/abs/html/exitcodes.html
