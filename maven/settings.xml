@@ -1,0 +1,55 @@
+<settings>
+
+	<servers>
+		<server>
+			<id>company-artifactory</id>
+			<!-- use directly the environment variables here, dereferencing via maven variables currently doesn't work -->
+			<username>${env.COMPANY_ARTIFACTORY_USERNAME}</username>
+			<password>${env.COMPANY_ARTIFACTORY_PASSWORD}</password>
+		</server>
+	</servers>
+
+	<mirrors>
+		<mirror>
+			<id>company-artifactory</id>
+			<!-- Sadly, we need to dupliacte the URL here, we couldn't use property-resolution from the company profile -->
+			<url>https://.../artifactory/repository</url>
+			<mirrorOf>*</mirrorOf>
+		</mirror>
+	</mirrors>
+
+	<!-- Do not override the default location, because of IntelliJ (it just won't work...) -->
+	<!-- see also https://youtrack.jetbrains.com/issue/IDEA-231927?_ga=2.86186014.729136622.1618566736-374277120.1617976037 -->
+	<localRepository>C:/Users/${env.USERNAME}/.m2/respository</localRepository>
+
+	<profiles>
+		<profile>
+			<id>company</id>
+			<activation>
+				<!-- instead activeByDefault, see https://stackoverflow.com/a/7481347/5471574 -->
+				<property>
+					<name>!skipCompanyProfile</name>
+				</property>
+			</activation>
+			<properties>
+				<user.language>de</user.language>
+				<user.country>CH</user.county>
+				<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
+			</properties>
+			<repositories>
+				<repository>
+					<id>company-artifactory</id>
+					<name>Company Artifactory</name>
+					<!-- Could be a property in this profile, but I haven't find a working use-case for it yet -->
+					<url>https://.../artifactory/repository</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
+</settings>
