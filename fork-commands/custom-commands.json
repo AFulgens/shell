@@ -1,0 +1,28 @@
+[
+	{
+		"name": "GC",
+		"target": "repository",
+		"ui": {
+			"title": "Perform a git garbage collection",
+			"description": "Are you sure? (Will make any of your reflog-based magic go poof!)",
+			"buttons": [
+				{
+					"title": "Yep!",
+					"action": {
+						"type": "process",
+						"path": "$git",
+						"args": "gc --aggressive",
+						"showOutput": true,
+						"waitForExit": true
+					}
+				},
+				{
+					"title": "Ui, nope!",
+					"action": {
+						"type": "cancel"
+					}
+				}
+			]
+		}
+	}
+]
