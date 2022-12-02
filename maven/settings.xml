@@ -20,7 +20,7 @@
 
 	<!-- Do not override the default location, because of IntelliJ (it just won't work...) -->
 	<!-- see also https://youtrack.jetbrains.com/issue/IDEA-231927?_ga=2.86186014.729136622.1618566736-374277120.1617976037 -->
-	<localRepository>C:/Users/${env.USERNAME}/.m2/respository</localRepository>
+	<localRepository>C:/Users/${env.USERNAME}/.m2/repository</localRepository>
 
 	<profiles>
 		<profile>

@@ -77,7 +77,7 @@ function default_prompt() {
 # The idea comes from Tom Duff and is based on the rc(1) shell default
 # I've got the idea from Kate: https://twitter.com/thingskatedid/status/1316081075043463170
 # Hint: Cygwin/Windows Terminal struggles with the history (up-arrow) in case there is too much
-#       coloring going in. Best to leave the default case without any colors.
+#       coloring going on. Best to leave the default case without any colors.
 function rc1_prompt() {
 	if [ $? -eq 0 ]; then
 		PS1="; "

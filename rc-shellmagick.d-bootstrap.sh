@@ -25,9 +25,9 @@ selector_default="@"
 # You are on your own here, some characters, like `[` will make this go kaput
 selectors="12345qwertasdfgzxcvb67890yuiophjkl;nm,.QWERTASDFGZXCVBYUIOPHJKL:NM<>?-=_+~"
 
-##############
-# MAGIC PART #
-##############
+#########
+# MAGIC #
+#########
 # After this part you should not need to make changes, unless you want to change
 # the logic of how projects are to be found
 

@@ -71,6 +71,7 @@ You can thus use any value you see fit (`1` is used in tests), and can use _unse
 * Extend this README.md with:
   * Rationale
   * Setup (for Cygwin)
+* Write README.md in global-git-hooks
 * Write README.md in rc-shellmagick.d
 * Do proper setup and testing on MingW
 * Do proper setup and testing on Darwin

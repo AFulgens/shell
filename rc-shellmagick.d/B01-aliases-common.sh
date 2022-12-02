@@ -9,5 +9,5 @@ alias ll='ls -lah'
 alias duh='du --max-depth=1 -h'
 
 # history purge = remove last history entry (useful for removing passwords and such)
-# Note: first dleeting the -2 (because of auto-append, see .bash_profile); then -1 (hp, because of auto-append); then persisting
+# Note: first deleting the -2 (because of auto-append, see .bash_profile); then -1 (hp, because of auto-append); then persisting
 alias hp='history -d $(($HISTCMD-2)); history -d $(($HISTCMD-1)); history -w'
