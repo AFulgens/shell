@@ -5,7 +5,7 @@ base_branch=$(git rev-parse --abbrev-ref HEAD)
 function test_no_prefixing() {
 	git checkout -qb ${1}
 	echo "commit message" > ./tester
-	../global-git-hooks/prepare-commit-msg ./tester >/dev/null
+	../global-githooks/prepare-commit-msg ./tester >/dev/null
 	exit_code=$?
 	if [[ ${exit_code} -ne ${2} ]]; then
 		echo "FAIL: ${3}"
@@ -20,7 +20,7 @@ function test_no_prefixing() {
 function test_prefixing() {
 	git checkout -qb ${1}
 	echo "commit message" > ./tester
-	../global-git-hooks/prepare-commit-msg ./tester >/dev/null
+	../global-githooks/prepare-commit-msg ./tester >/dev/null
 	exit_code=$?
 	if [[ ${exit_code} -ne 0 ]]; then
 		echo "FAIL: ${2}"
@@ -40,7 +40,7 @@ function test_prefixing() {
 function test_doubly_prefixing() {
 	git checkout -qb ${1}
 	echo "${3}Commit message" > ./tester
-	../global-git-hooks/prepare-commit-msg ./tester >/dev/null
+	../global-githooks/prepare-commit-msg ./tester >/dev/null
 	exit_code=$?
 	if [[ ${exit_code} -ne 0 ]]; then
 		echo "FAIL: ${2}"

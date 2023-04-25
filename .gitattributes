@@ -4,8 +4,10 @@
 *.zip binary
 
 # Scripts
+.bash_profile eol=lf
 *.sh eol=lf
 *.bat eol=crlf
 *.cmd eol=crlf
 mvnw eol=lf
-global-git-hooks/* eol=lf
+global-githooks/* eol=lf
+tests/* eol=lf

@@ -4,7 +4,7 @@
 
 ### NEGATIVE empty message
 echo "" > tester
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 80 ]]; then
 	echo "FAIL: Rule 0: empty message"
@@ -15,7 +15,7 @@ fi
 
 ### NEGATIVE "no message"
 echo "no message" > tester
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 80 ]]; then
 	echo "FAIL: Rule 0: no message as message"
@@ -26,7 +26,7 @@ fi
 
 ### POSITIVE there is a message
 echo "commit message" > tester
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 0: any message"
@@ -42,7 +42,7 @@ cat <<EOF > tester
 Subject
 Body line 1
 EOF
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 81 ]]; then
 	echo "FAIL: Rule 1: no empty line"
@@ -57,7 +57,7 @@ Subject
 
 Body line 1
 EOF
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 1: empty line"
@@ -70,7 +70,7 @@ fi
 
 ### NEGATIVE subject is longer than 50
 echo "123456789012345678901234567890123456789012345678901" > tester
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 82 ]]; then
 	echo "FAIL: Rule 2: longer than 50"
@@ -81,7 +81,7 @@ fi
 
 ### POSITIVE subject is shorter than or equals 50
 echo "12345678901234567890123456789012345678901234567890" > tester
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 2: equals 50"
@@ -91,7 +91,7 @@ else
 fi
 
 echo "1234567890123456789012345678901234567890123456789" > tester
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 2: shorter than 50"
@@ -103,7 +103,7 @@ fi
 ### NEGATIVE subject is longer than variable
 echo "1234567890" > tester
 export COMMIT_SUBJECT_LINE_LENGTH=9
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 82 ]]; then
 	echo "FAIL: Rule 2: longer than 9"
@@ -115,7 +115,7 @@ unset COMMIT_SUBJECT_LINE_LENGTH
 
 echo "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901" > tester
 export COMMIT_SUBJECT_LINE_LENGTH=100
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 82 ]]; then
 	echo "FAIL: Rule 2: longer than 100"
@@ -128,7 +128,7 @@ unset COMMIT_SUBJECT_LINE_LENGTH
 ### POSITIVE subject is shorter than or equals variable
 echo "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" > tester
 export COMMIT_SUBJECT_LINE_LENGTH=100
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 2: equals 100"
@@ -140,7 +140,7 @@ unset COMMIT_SUBJECT_LINE_LENGTH
 
 echo "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" > tester
 export COMMIT_SUBJECT_LINE_LENGTH=100
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 2: shorter than 100"
@@ -154,7 +154,7 @@ unset COMMIT_SUBJECT_LINE_LENGTH
 
 ### NEGATIVE subject line ends with period
 echo "commit message." > tester
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 84 ]]; then
 	echo "FAIL: Rule 4: with period without body"
@@ -168,7 +168,7 @@ Subject.
 
 Body.
 EOF
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 84 ]]; then
 	echo "FAIL: Rule 4: with period with body"
@@ -179,7 +179,7 @@ fi
 
 ### POSITIVE subject line does not end with period
 echo "commit message" > tester
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 4: without period without body"
@@ -193,7 +193,7 @@ Subject
 
 Body.
 EOF
-../global-git-hooks/commit-msg "../tests/tester" >/dev/null
+../global-githooks/commit-msg "../tests/tester" >/dev/null
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 4: without period with body"
@@ -212,7 +212,7 @@ Body line 0001:6789012345678901234567890123456789012345678901234567890123
 Body line 0002:6789012345678901234567890123456789012345678901234567890123
 Body line 0003:6789012345678901234567890123456789012345678901234567890123
 EOF
-../global-git-hooks/commit-msg "../tests/tester" > ./output
+../global-githooks/commit-msg "../tests/tester" > ./output
 exit_code=$?
 test_ok=1
 if [[ ${exit_code} -ne 86 ]]; then
@@ -243,7 +243,7 @@ Body line 0001:6789012345678901234567890123456789012345678901234567890123
 Body line 0002:678901234567890123456789012345678901234567890123456789012
 Body line 0003:678901234567890123456789012345678901234567890123456789012
 EOF
-../global-git-hooks/commit-msg "../tests/tester" > ./output
+../global-githooks/commit-msg "../tests/tester" > ./output
 exit_code=$?
 test_ok=1
 if [[ ${exit_code} -ne 86 ]]; then
@@ -273,7 +273,7 @@ Body line 0001:678901234567890123456789012345678901234567890123456789012
 Body line 0002:6789012345678901234567890123456789012345678901234567890123
 Body line 0003:678901234567890123456789012345678901234567890123456789012
 EOF
-../global-git-hooks/commit-msg "../tests/tester" > ./output
+../global-githooks/commit-msg "../tests/tester" > ./output
 exit_code=$?
 test_ok=1
 if [[ ${exit_code} -ne 86 ]]; then
@@ -304,7 +304,7 @@ Body line 0001:678901234567890123456789012345678901234567890123456789012
 Body line 0002:678901234567890123456789012345678901234567890123456789012
 Body line 0003:6789012345678901234567890123456789012345678901234567890123
 EOF
-../global-git-hooks/commit-msg "../tests/tester" > ./output
+../global-githooks/commit-msg "../tests/tester" > ./output
 exit_code=$?
 test_ok=1
 if [[ ${exit_code} -ne 86 ]]; then
@@ -336,7 +336,7 @@ Body line 0001:6789
 Body line 0002:67890
 EOF
 export COMMIT_BODY_LINE_LENGTH=19
-../global-git-hooks/commit-msg "../tests/tester" > ./output
+../global-githooks/commit-msg "../tests/tester" > ./output
 exit_code=$?
 test_ok=1
 if [[ ${exit_code} -ne 86 ]]; then
@@ -369,7 +369,7 @@ Subject
 Body line 0001:678901234567890123456789012345678901234567890123456789012
 Body line 0002:67890123456789012345678901234567890123456789012345678901
 EOF
-../global-git-hooks/commit-msg "../tests/tester" > ./output
+../global-githooks/commit-msg "../tests/tester" > ./output
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 6: lines not longer than 72"
@@ -386,7 +386,7 @@ Body line 0001:6789
 Body line 0002:67890
 EOF
 export COMMIT_BODY_LINE_LENGTH=20
-../global-git-hooks/commit-msg "../tests/tester" > ./output
+../global-githooks/commit-msg "../tests/tester" > ./output
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 6: lines not longer than variable"
@@ -403,7 +403,7 @@ Body line 0001:67890123456789012345678901234567890123456789012345678901234567890
 Body line 0002:67890
 EOF
 export COMMIT_BODY_LINE_LENGTH=100
-../global-git-hooks/commit-msg "../tests/tester" > ./output
+../global-githooks/commit-msg "../tests/tester" > ./output
 exit_code=$?
 if [[ ${exit_code} -ne 0 ]]; then
 	echo "FAIL: Rule 6: lines not longer than variable"
