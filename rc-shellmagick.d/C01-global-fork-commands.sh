@@ -1,9 +1,15 @@
 #!/bin/sh
 
 echo ""
+
+if [[ -z ${GLOBAL_FORK_USE+x} ]]; then
+	echo "[2m[3mSkipping setup for Fork (variable GLOBAL_FORK_USE is unset)[0m"
+	return
+fi
+
 echo -n "[2m[3mRegistering global Fork commands "
 
-if [[ ! -z ${!GLOBAL_FORK_DO_NOT_OVERRIDE+x} ]]; then
+if [[ ! -z ${GLOBAL_FORK_DO_NOT_OVERRIDE+x} ]]; then
 	echo "by (optionally) adding commands the original content of the .fork directory[0m"
 	if [ ! -d ${PROJECT_PATH}/.fork ]; then
 		mkdir -p ${PROJECT_PATH}/.fork

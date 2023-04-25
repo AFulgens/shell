@@ -6,11 +6,11 @@
 # - it's a git project (i.e., has a `.git` subdirectory)
 # - it is not ignored (i.e., does not have the marker file `.git/.ignore-shellmagick`)
 
-#################
-# CUSTOMIZATION #
-#################
+######################
+# BASE CUSTOMIZATION #
+######################
 
-export RC_SHELLMAGICK_ROOT_PATH="C:\Projects"
+export RC_SHELLMAGICK_ROOT_PATH="C:\projects"
 if $cygwin; then export RC_SHELLMAGICK_ROOT_PATH="$(cygpath --path --unix "${RC_SHELLMAGICK_ROOT_PATH}")"; fi
 
 export PATH_TOOLS="${RC_SHELLMAGICK_ROOT_PATH}/tools"
@@ -24,6 +24,44 @@ project_default="sandbox"
 selector_default="@"
 # You are on your own here, some characters, like `[` will make this go kaput
 selectors="12345qwertasdfgzxcvb67890yuiophjkl;nm,.QWERTASDFGZXCVBYUIOPHJKL:NM<>?-=_+~"
+
+######################
+# TOOL CUSTOMIZATION #
+######################
+
+# rc-shellmagick.d/C00-global-githooks.sh
+#export GLOBAL_GITHOOKS_DO_NOT_OVERRIDE=1
+
+# rc-shellmagick.d/C01-global-fork-commands.sh
+export GLOBAL_FORK_USE=1 
+#export GLOBAL_FORK_DO_NOT_OVERRIDE=1 
+
+# rc-shellmagick.d/P00-set-git.sh, ${APPDATA} is cygwin-ized %AppData%
+export GIT_HOME=$(cygpath --path --unix "${APPDATA}/../Local/Fork/gitInstance/2.39.1")
+
+# rc-shellmagick.d/P01-setup-java.sh
+if [[ ! -z ${JAVA_BASE+x} ]]; then
+	export JAVA_BASE=$(cygpath --path --unix "${JAVA_BASE}")
+fi
+if [[ ! -z ${JAVA_HOME+x} ]]; then
+	export JAVA_HOME=$(cygpath --path --unix "${JAVA_HOME}")
+fi
+
+# rc-shellmagick.d/P10-setup-spring-boot.sh
+export SETUP_SPRING_BOOT=1
+
+# global-githooks/commit-msg
+#export COMMIT_SUBJECT_LINE_LENGTH=50 # value is used, default is 50
+#export COMMIT_BODY_LINE_LENGTH=72 # value used, default is 72
+
+# global-githooks/pre-commit
+#export COMMIT_ALLOW_UTF32_BOM=1
+#export COMMIT_ALLOW_UTF16_BOM=1
+#export COMMIT_ALLOW_UTF8_BOM=1
+#export COMMIT_ALLOW_FIXME=1
+#export COMMIT_ALLOW_TODO=1
+#export COMMIT_ALLOW_XXX=1
+#export COMMIT_ALLOW_BINARY=1
 
 #########
 # MAGIC #
@@ -82,7 +120,7 @@ else
 		fi
 	done
 	echo ""
-	echo "${counter_projects_found} projects found (${counter_projects_ignored} explicitly ignored and ${counter_projects_nongit} are not git repos)"
+	echo "$((${counter_projects_found}+1)) projects found (${counter_projects_ignored} explicitly ignored and ${counter_projects_nongit} are not git repos)"
 
 	for (( i=0; i<${#selectors}; ++i )); do
 		current_key=${selectors:$i:1}

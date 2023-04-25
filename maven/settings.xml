@@ -4,16 +4,15 @@
 		<server>
 			<id>company-artifactory</id>
 			<!-- use directly the environment variables here, dereferencing via maven variables currently doesn't work -->
-			<username>${env.COMPANY_ARTIFACTORY_USERNAME}</username>
-			<password>${env.COMPANY_ARTIFACTORY_PASSWORD}</password>
+			<username>${env.ARTIFACTORY_USERNAME}</username>
+			<password>${env.ARTIFACTORY_PASSWORD}</password>
 		</server>
 	</servers>
 
 	<mirrors>
 		<mirror>
 			<id>company-artifactory</id>
-			<!-- Sadly, we need to dupliacte the URL here, we couldn't use property-resolution from the company profile -->
-			<url>https://.../artifactory/repository</url>
+			<url>${env.ARTIFACTORY_URL}</url>
 			<mirrorOf>*</mirrorOf>
 		</mirror>
 	</mirrors>
@@ -33,15 +32,14 @@
 			</activation>
 			<properties>
 				<user.language>de</user.language>
-				<user.country>CH</user.county>
+				<user.country>CH</user.country>
 				<project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
 			</properties>
 			<repositories>
 				<repository>
 					<id>company-artifactory</id>
 					<name>Company Artifactory</name>
-					<!-- Could be a property in this profile, but I haven't find a working use-case for it yet -->
-					<url>https://.../artifactory/repository</url>
+					<url>${env.ARTIFACTORY_URL}</url>
 					<releases>
 						<enabled>true</enabled>
 					</releases>

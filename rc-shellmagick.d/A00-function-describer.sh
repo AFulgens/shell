@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo ""
-echo "[2m[3mDefine function describer helper function[0m"
+echo "[2m[3mDefining function describer helper function[0m"
 
 function __describe_function() {
 	if [ "$#" -ne 2 ]; then

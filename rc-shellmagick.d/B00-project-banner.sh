@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Update the title of the window
-settitle "${PROJECT_NAME}"
+settitle "${PROJECT_NAME} - ShellMagick"
 
 echo "[1m[33m"
 

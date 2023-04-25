@@ -2,12 +2,17 @@
 
 echo ""
 
+if [[ -z ${SETUP_SPRING_BOOT+x} ]]; then
+	echo "[2m[3mSkipping setup for Spring-Boot (variable SETUP_SPRING_BOOT is unset)[0m"
+	return
+fi
+
 if [[ ! -f "${PROJECT_PATH}/pom.xml" ]]; then
 	echo "[2m[3mSkipping setup for Spring-Boot (no pom.xml found)[0m"
 	return
 fi
 
-echo "[2m[3mSetting up for Spring-Boot[0m"
+echo "[2m[3mSetting up Spring-Boot[0m"
 
 alias sbl='sb local'
 

@@ -117,7 +117,7 @@ case "`uname`" in
 	;;
 esac
 
-# Here one shouldn't use [[ ! -z ${!VAR+X} ]] because on Windows it will cause
+# Here one shouldn't use [[ ! -z ${!VAR+x} ]] because on Windows it will cause
 # bad substitution erros, because of the backslashes...
 if [[ ! "${CURRENT_DIRECTORY}" =~ ^$ ]]; then
 	if $cygwin; then

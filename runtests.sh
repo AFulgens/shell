@@ -5,9 +5,11 @@ echo "(Everything should be cleaned up though after the tests are done)"
 echo
 
 pushd tests >/dev/null
+
 for test in $(ls *); do
 	echo "Running ${test}"
 	sh ${test}
 	echo
 done
+
 popd >/dev/null

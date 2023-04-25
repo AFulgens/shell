@@ -7,9 +7,9 @@ if [[ ! -f "${PROJECT_PATH}/pom.xml" ]]; then
 	return
 fi
 
-echo "[2m[3mSetting up for Maven[0m"
+echo "[2m[3mSetting up Maven[0m"
 
-if [[ -z ${JAVA_HOME} ]]; then
+if [[ -z ${JAVA_HOME+x} ]]; then
 	echo -e "[1m[31m\tFAILURE: Java is not set up -> no setup possible for Maven[0m"
 	return
 fi
@@ -18,14 +18,16 @@ echo ""
 
 export MVNW_VERBOSE=false
 
-if [ -f ${MAVEN_SETTINGS_FILE} ]; then
-	alias mvn="${PROJECT_PATH/mvnw} -gs \"$(cygpath --path --windows ${MAVEN_SETTINGS_FILE})\""
-	echo "[1m\$MAVEN_SETTINGS_FILE: \"$(cygpath --path --windows ${MAVEN_SETTINGS_FILE})\"[0m"
-else
-	alias mvn="${PROJECT_PATH/mvnw}"
+if [[ -z ${MAVEN_SETTINGS_FILE+x} ]]; then
+	alias mvn="${PROJECT_PATH}/mvnw"
 	echo "[1m\$MAVEN_SETTINGS_FILE: [1m[31mWARNING: No global settings file found[0m"
+else
+	# Currently this is not working in case ${MAVEN_SETTINGS_FILE} is already in Windows format, it will be prefixed with "C;"
+	# MAVEN_SETTINGS_FILE=$(cygpath --path --windows ${MAVEN_SETTINGS_FILE})
+	alias mvn="${PROJECT_PATH}/mvnw -gs \"${MAVEN_SETTINGS_FILE}\""
+	echo "[1m\$MAVEN_SETTINGS_FILE: ${MAVEN_SETTINGS_FILE}[0m"
 fi
-echo "[1mNo user settings file will be used, only global (using two settings files is incompatible with IntelliJ)[0m"
+echo "[1mNo user settings file will be used, only global (using two settings files is incompatible with IntelliJ IDEA)[0m"
 
 echo ""
 echo "[1mMaven version:[0m"
