@@ -28,10 +28,10 @@ if [[ -d ${INTELLIJ_BIN} ]]; then
 		printf >&2 "\tDo you want to start IntelliJ IDEA now for this project? (Y/n) "
 		IFS= read -r start_idea
 
-		if [[ ${start_idea} =~ [nN] ]]; then
+		if [[ ${start_idea} =~ ^[nN]$ ]]; then
 			echo -e "[2m[3mNot starting IntelliJ IDEA[0m"
 		else
-			if [[ ${start_idea} =~ [yY]? ]]; then
+			if [[ ${start_idea} =~ ^[yY]?$ ]]; then
 				echo -e "[2m[3mStarting IntelliJ IDEA[0m"
 				idea .
 			else

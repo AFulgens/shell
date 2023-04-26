@@ -19,6 +19,13 @@ has_xxx()   { grep -i "XXX"   "${1}"; }
 
 # Check each file in the commit
 git diff --cached --name-status | while read status file; do
+	# Git message for a rename will contain the old and the new filename separated by a TAB
+	tab=$(printf '\t')
+	if [[ ${file} =~ .*${tab}.* ]]; then
+		file=($file)
+		file=${file[1]}
+	fi
+
 	# Reject files with any kind of UTF-BOM
 	## Note: check in "reserve" order, because the UTF-16 BOM (LE) is a prefix of the UTF-32 BOM (LE)
 	if [[ -z ${COMMIT_ALLOW_UTF32_BOM+x} ]] && has_bom_utf32 "${file}"; then
