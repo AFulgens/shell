@@ -1,7 +1,12 @@
 #!/bin/sh
 
 # Update the title of the window
-settitle "${PROJECT_NAME} - ShellMagick"
+TITLE="${PROJECT_NAME} - ShellMagick"
+if $cygwin; then
+	TITLE="${TITLE} (Cygwin)"
+fi
+
+settitle "${TITLE}"
 
 echo "[1m[33m"
 

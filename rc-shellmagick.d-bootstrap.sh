@@ -29,6 +29,10 @@ selectors="12345qwertasdfgzxcvb67890yuiophjkl;nm,.QWERTASDFGZXCVBYUIOPHJKL:NM<>?
 # TOOL CUSTOMIZATION #
 ######################
 
+# rc-shellmagick.d/A20-idea-function-and-hook.sh
+export GLOBAL_IDEA_USE=1
+#export INTELLIJ_HOME=... # value used, defaulting to ${PATH_TOOLS}/idea
+
 # rc-shellmagick.d/C00-global-githooks.sh
 #export GLOBAL_GITHOOKS_DO_NOT_OVERRIDE=1
 
@@ -130,7 +134,8 @@ else
 	done
 	echo "(${selector_default})" ${project_default}
 	while true; do
-		read -p "Select a project: " selected_project
+		printf >&2 "Select a project: "
+		IFS= read -r selected_project
 
 		if [[ "${selector_default}" == ${selected_project} ]]; then
 			export PROJECT_NAME="${project_default}"

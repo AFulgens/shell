@@ -37,5 +37,3 @@ else
 	echo "[1m-------------[0m"
 	java -version
 fi
-
-unset CANDIDATE
