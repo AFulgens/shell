@@ -17,7 +17,6 @@ For that project than `rc-shellmagick.d.sh` will set up everything below, in a s
 * Replace your `.bash_profile` with the `.bash_profile` from this repository.
 * Set up the environment variables that are expected in `cygwin-bootstrap.cmd`
 * Start `cygwin-bootstrap.cmd` (either by double-clicking, through CMD or for best results via [Windows Terminal](https://github.com/microsoft/terminal), feel free to use the `logo.png` from this project 😉).
-* Start Cygwin.
 * Enjoy.
 
 ### Customization
@@ -46,6 +45,10 @@ For rationale and detailed description of hooks in this project see the document
 * Do proper setup and testing on Darwin
 * Do proper setup and testing on a native Linux command line
 * Do proper setup and testing on WSL2
+* Provide bootstrapping for
+  * maven-wrapper (copy it from this project)
+  * scan .gitattributes for sane defaults, if missing WARN
+  * scan .gitignore for sane defaults (e.g., .fork), if missing WARN
 * MAVEN_DEBUG_PORT=8000
 * MAVEN_SETTINGS_FILE cygpath?
 * Check all `if`s so that there are no naked `if`s...
