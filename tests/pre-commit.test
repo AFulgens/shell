@@ -12,7 +12,7 @@ echo "Beförę ŧhis text þere iß an UTF-8 ★ΒOM㆘㆒㆝" >> tester
 export COMMIT_ALLOW_UTF8_BOM=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -28,7 +28,7 @@ printf '\xef\xbb\xbf' > tester
 echo "Beförę ŧhis text þere iß an UTF-8 ★ΒOM㆘㆒㆝" >> tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 64 ]]; then
@@ -46,7 +46,7 @@ echo "Beförę ŧhis text þere iß an UTF-16 (big-endian) ★★ΒOM㆘㆒㆝" 
 export COMMIT_ALLOW_UTF16_BOM=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -62,7 +62,7 @@ printf '\xfe\xff' > tester
 echo "Beförę ŧhis text þere iß an UTF-16 (big-endian) ★★ΒOM㆘㆒㆝" >> tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 65 ]]; then
@@ -78,7 +78,7 @@ echo "Beförę ŧhis text þere iß an UTF-16 (little-endian) ★★ΒOM㆘㆒�
 export COMMIT_ALLOW_UTF16_BOM=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -94,7 +94,7 @@ printf '\xff\xfe' > tester
 echo "Beförę ŧhis text þere iß an UTF-16 (little-endian) ★★ΒOM㆘㆒㆝" >> tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 65 ]]; then
@@ -105,14 +105,14 @@ else
 fi
 git reset -- tester >/dev/null
 
-# Testing UTF-132 BOMs
+# Testing UTF-32 BOMs
 
 printf '\x00\x00\xfe\xff' > tester
 echo "Beförę ŧhis text þere iß an UTF-32 (big-endian) ★★ΒOM㆘㆒㆝" >> tester
 export COMMIT_ALLOW_UTF32_BOM=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -128,7 +128,7 @@ printf '\x00\x00\xfe\xff' > tester
 echo "Beförę ŧhis text þere iß an UTF-32 (big-endian) ★★ΒOM㆘㆒㆝" >> tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 66 ]]; then
@@ -144,7 +144,7 @@ echo "Beförę ŧhis text þere iß an UTF-32 (little-endian) ★★ΒOM㆘㆒�
 export COMMIT_ALLOW_UTF32_BOM=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -160,7 +160,7 @@ printf '\xff\xfe\x00\x00' > tester
 echo "Beförę ŧhis text þere iß an UTF-32 (little-endian) ★★ΒOM㆘㆒㆝" >> tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 66 ]]; then
@@ -176,7 +176,7 @@ git reset -- tester >/dev/null
 echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" > tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -194,7 +194,7 @@ echo "// FIXME: replace text by tëxtū" >> tester
 export COMMIT_ALLOW_FIXME=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -210,7 +210,7 @@ echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒�
 echo "// FIXME: replace text by tëxtū" >> tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 67 ]]; then
@@ -228,7 +228,7 @@ echo "// TODO: replace text by tëxtū" >> tester
 export COMMIT_ALLOW_TODO=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -244,7 +244,7 @@ echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒�
 echo "// TODO: replace text by tëxtū" >> tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 68 ]]; then
@@ -262,7 +262,7 @@ echo "// XXX: replace text by tëxtū" >> tester
 export COMMIT_ALLOW_XXX=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -278,7 +278,7 @@ echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒�
 echo "// XXX: replace text by tëxtū" >> tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 69 ]]; then
@@ -295,7 +295,7 @@ echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒�
 export COMMIT_ALLOW_BINARY=1
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 0 ]]; then
@@ -310,7 +310,7 @@ unset COMMIT_ALLOW_BINARY
 echo "Beförę ŧhis text þere iß nø kïnđ of UTF ★ΒOMBOROMBOMBOM㆘㆒㆝" | gzip > tester
 git add tester >/dev/null
 pushd .. >/dev/null
-global-githooks/pre-commit "../tests/tester" >/dev/null
+global-githooks/pre-commit "tests/tester" >/dev/null
 exit_code=$?
 popd >/dev/null
 if [[ ${exit_code} -ne 70 ]]; then

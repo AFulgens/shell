@@ -6,7 +6,7 @@ echo
 
 pushd tests >/dev/null
 
-for test in $(ls *); do
+for test in $(ls *.test); do
 	echo "Running ${test}"
 	sh ${test}
 	echo

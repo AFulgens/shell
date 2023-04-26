@@ -6,10 +6,12 @@
 
 SCRIPTPATH="$( cd "$(dirname "${0}")" ; pwd -P )"
 
-# cf. https://www.unicode.org/faq/utf_bom.html#BOM
-has_bom_utf8()  { hexdump -n 3 -C "${1}" | grep -q  'ef bb bf'                 ; }
-has_bom_utf16() { hexdump -n 2 -C "${1}" | grep -Eq '(fe ff|ff fe)'            ; }
-has_bom_utf32() { hexdump -n 4 -C "${1}" | grep -Eq '(00 00 fe ff|ff fe 00 00)'; }
+# cf. https://www.unicode.org/faq/utf_bom.html#BOM & https://stackoverflow.com/a/71979980/5471574
+# hexdump is not in the embedded MinGW for Git for Windows (which is e.g., used in an embedded form Fork)
+# thus, we are using sha1sum instead, which must be there, because Git is used that. So it's there, right? … RIGHT?
+has_bom_utf8()  { head -c3 "${1}" | sha1sum | grep -q '57218c316b6921e2cd61027a2387edc31a2d9471' ; } # ef bb bf
+has_bom_utf16() { head -c2 "${1}" | sha1sum | grep -qE '(262378002c95ae7e29535cb9f438db219adf98f5|d62636d8caec13f04e28442a0a6fa1afeb024bbb)' ; } # fe ff | ff fe
+has_bom_utf32() { head -c4 "${1}" | sha1sum | grep -qE '(20ef1aca4d885435696fbe230a51b94daffd3207|ffa5207277b232210136ddba3b8f2cc9e2229ebd)'; } # 00 00 fe ff | ff fe 00 00
 
 has_fixme() { grep -i "FIXME" "${1}"; }
 has_todo()  { grep -i "TODO"  "${1}"; }
@@ -49,7 +51,7 @@ git diff --cached --name-status | while read status file; do
 	fi
 
 	# Reject non-text file (even though there is now Git-LFS, git is not meant for binary files)
-	if [[ -z ${COMMIT_ALLOW_BINARY+x} ]] && [[ ! $(file ${file}) =~ .*text.* ]]; then
+	if [[ -z ${COMMIT_ALLOW_BINARY+x} ]] && [[ ! $(file "${file}") =~ .*text.* ]]; then
 		sh ${SCRIPTPATH}/reject "Non-text files should not be commited, this file seems to be non-text: ${file}"
 		exit 70
 	fi
