@@ -17,6 +17,21 @@
 		</mirror>
 	</mirrors>
 
+	<!-- On Windows get these via `netsh winhttp show proxy` and set them up as environment variables -->
+	<!-- Note: with maven version 3.8.7 the resolution for port throws a NumberFormatException, 
+	           but you can always just write the value directly here, instead of an environment variable. -->
+	<proxies>
+		<proxy>
+			<id>company-proxy</id>
+			<active>true</active>
+			<protocol>https</protocol>
+			<host>${env.HTTPS_PROXY_URL}</host>
+			<port>${env.HTTPS_PROXY_PORT}</port>
+			<!-- Take care that nonProxyHosts is a list, separated by | and needs *. prefix for (sub-)domains -->
+			<!-- <nonProxyHosts>*.google.com|localhost</nonProxyHosts> -->
+		</proxy>
+	</proxies>
+
 	<!-- Do not override the default location, because of IntelliJ (it just won't work...) -->
 	<!-- see also https://youtrack.jetbrains.com/issue/IDEA-231927?_ga=2.86186014.729136622.1618566736-374277120.1617976037 -->
 	<localRepository>C:/Users/${env.USERNAME}/.m2/repository</localRepository>
