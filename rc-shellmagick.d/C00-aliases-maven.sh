@@ -24,7 +24,10 @@ alias mci='mvn clean install'
 alias mciskip='mvn clean install -DskipTests=true'
 
 alias mwasp='mvn dependency-check:check -Powasp-dependency-check'
-alias mpit='mvn test -Pintegration-tests org.pitest:pitest-maven:mutationCoverage'
+alias mtest='mvn test'
+alias mtestint='mvn test -Pintegration-tests'
+alias mtestpit='mvn test -Pmutation-tests org.pitest:pitest-maven:mutationCoverage'
+alias pitreport='cygstart target/pit-reports/index.html'
 
 alias mdown='mvn dependency:sources dependency:resolve'
 alias mdowndoc='mvn depenedency:sources dependency:resolve -Dclassifier=javadoc'
