@@ -35,9 +35,9 @@ These must be copied into the respective `.git/hooks` directory in each reposito
     * make the first character uppercase
     * add prefix as follows:
       * `<project-prefix>-<ticket-number>: ` for feature branches (e.g., `JIRA-123: My message`)
-      * `<project-prefix>-<ticket-number> (bugfix): ` for bugfix branches (e.g., `JIRA-123 (bugfix): My message`)
-      * `<project-prefix>-<ticket-number> (hotfix): ` for hotfix branches (e.g., `JIRA-123 (hotfix): My message`)
-      * `release <version>: ` for release branche (e.g., `release 1.2.3.: My message`)
+      * `<project-prefix>-<ticket-number>: (bugfix) ` for bugfix branches (e.g., `JIRA-123: (bugfix) My message`)
+      * `<project-prefix>-<ticket-number>: (hotfix) ` for hotfix branches (e.g., `JIRA-123: (hotfix) My message`)
+      * `release <version>: ` for release branches (e.g., `release 1.2.3.: My message`)
 * `commit-msg` – check the text of each commit message based on https://cbea.ms/git-commit/
   * Rule 0: There must be a commit message
     * violations are denoted by exit status `80`

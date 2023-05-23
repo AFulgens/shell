@@ -51,12 +51,12 @@ if [[ "${current_branch}" == feature/* ]] && [[ ! ${original_commit_message} =~ 
 fi
 
 if [[ "${current_branch}" == bugfix/* ]] && [[ ! ${original_commit_message} =~ ${infix}\ \(bugfix\):\ .* ]]; then
-	echo "$(echo ${infix}) (bugfix): $sentence_case" > ${1} # bugfix/TICKET-123 -> TICKET-123 (bugfix): <message>
+	echo "$(echo ${infix}): (bugfix) $sentence_case" > ${1} # bugfix/TICKET-123 -> TICKET-123: (bugfix) <message>
 	return 0 2>/dev/null || exit 0
 fi
 
 if [[ "${current_branch}" == hotfix/* ]] && [[ ! ${original_commit_message} =~ ${infix}\ \(hotfix\):\ .* ]]; then
-	echo "$(echo ${infix}) (hotfix): $sentence_case" > ${1} # hotfix/TICKET-123 -> TICKET-123 (hotfix): <message>
+	echo "$(echo ${infix}): (hotfix) $sentence_case" > ${1} # hotfix/TICKET-123 -> TICKET-123: (hotfix) <message>
 	return 0 2>/dev/null || exit 0
 fi
 
