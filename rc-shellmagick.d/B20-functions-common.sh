@@ -17,7 +17,7 @@ function popd {
 # exclude libraries that usually are not looked for
 function f {
 	find . -type d \( -name "\.git" -o -name "\.idea" -o -name "target" -o -name "bin" \) -prune \
-	       -o type f | grep --color "${1}"
+	       -o -type f | grep --color "${1}"
 }
 FUNCTIONS[f]="find files with the given name (case-sensitive)"
 
@@ -26,7 +26,7 @@ FUNCTIONS[f]="find files with the given name (case-sensitive)"
 # fi is taken 🙄
 function Fi {
 	find . -type d \( -name "\.git" -o -name "\.idea" -o -name "target" -o -name "bin" \) -prune \
-	       -o type f | grep -i --color "${1}"
+	       -o -type f | grep -i --color "${1}"
 }
 FUNCTIONS[Fi]="find files with the given name (case-insensitive)"
 
@@ -34,11 +34,11 @@ FUNCTIONS[Fi]="find files with the given name (case-insensitive)"
 function ff {
 	if [ "$#" -eq 1 ]; then # in all files
 		find . -type d \( -name "\.git" -o -name "\.idea" -o -name "target" -o -name "bin" \) -prune \
-		       -o type f -print0 \
+		       -o -type f -print0 \
 		| xargs -0 grep --color "${1}"
 	else # in files according to pattern
 		find . -type d \( -name "\.git" -o -name "\.idea" -o -name "target" -o -name "bin" \) -prune \
-		       -o type f -name "${2}" -print0 \
+		       -o -type f -name "${2}" -print0 \
 		| xargs -0 grep --color "${1}"
 	fi
 }
@@ -48,11 +48,11 @@ FUNCTIONS[ff]="find case-sensitive string files (optional second argument: file 
 function ffi {
 	if [ "$#" -eq 1 ]; then # in all files
 		find . -type d \( -name "\.git" -o -name "\.idea" -o -name "target" -o -name "bin" \) -prune \
-		       -o type f -print0 \
+		       -o -type f -print0 \
 		| xargs -0 grep -i --color "${1}"
 	else # in files according to pattern
 		find . -type d \( -name "\.git" -o -name "\.idea" -o -name "target" -o -name "bin" \) -prune \
-		       -o type f -name "${2}" -print0 \
+		       -o -type f -name "${2}" -print0 \
 		| xargs -0 grep -i --color "${1}"
 	fi
 }
