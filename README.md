@@ -38,6 +38,9 @@ For rationale and detailed description of hooks in this project see the document
 
 ## Open TODOs
 
+* Rework as part of https://projectenv.io/?
+* Add "global" .gitignore
+  * Ability to "merge" .mailmap, .gitattributes, .gitignore, i.e., copy only entries still missing
 * Extend this README.md with:
   * Setup (for !Cygwin)
 * Write README.md in rc-shellmagick.d

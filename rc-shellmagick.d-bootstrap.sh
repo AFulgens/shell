@@ -40,6 +40,9 @@ export GLOBAL_IDEA_USE=1
 export GLOBAL_FORK_USE=1 
 #export GLOBAL_FORK_DO_NOT_OVERRIDE=1 
 
+# rc-shellmagick.d/C11-global-mailmap.sh
+export GLOBAL_MAILMAP_PATH=${RC_SHELLMAGICK_ROOT_PATH}/${GIT_SUBPATH}/.mailmap
+
 # rc-shellmagick.d/P00-set-git.sh, ${APPDATA} is cygwin-ized %AppData%
 export GIT_HOME=$(cygpath --path --unix "${APPDATA}/../Local/Fork/gitInstance/2.39.1")
 
