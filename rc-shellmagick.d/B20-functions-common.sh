@@ -58,6 +58,20 @@ function ffi {
 }
 FUNCTIONS[ffi]="find case-insensitive string files (optional second argument: file name pattern)"
 
+# search for regex in files (optionally only files with names matching a pattern)
+function ffir {
+	if [ "$#" -eq 1 ]; then # in all files
+		find . -type d \( -name "\.git" -o -name "\.idea" -o -name "target" -o -name "bin" \) -prune \
+		       -o -type f -print0 \
+		| xargs -0 grep -Ei --color "${1}"
+	else # in files according to pattern
+		find . -type d \( -name "\.git" -o -name "\.idea" -o -name "target" -o -name "bin" \) -prune \
+		       -o -type f -name "${2}" -print0 \
+		| xargs -0 grep -Ei --color "${1}"
+	fi
+}
+FUNCTIONS[ffir]="find case-insensitive regex files (optional second argument: file name pattern)"
+
 # quick way home
 function goto-project {
 	cd "${PROJECT_PATH}"
