@@ -23,6 +23,10 @@ if not defined MAVEN_SETTINGS_FILE set MAVEN_SETTINGS_FILE=%MAVEN_SETTINGS_FILE%
 REM We pivot instantly away from Windows CMD
 SET BOOTSTRAP_SCRIPT=C:\Projects\tools\shellmagick\rc-shellmagick.d-bootstrap.sh
 
+chcp 65001 >nul 2>nul
+set LANG=en_US.UTF-8
+set LC_ALL=en_US.UTF-8
+
 REM The pivot works automatigically, thanks to our .bash_profile
 C:\cygwin64\bin\bash.exe --login -i
 
