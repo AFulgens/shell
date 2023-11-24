@@ -19,12 +19,12 @@ echo ""
 export MVNW_VERBOSE=false
 
 if [[ -z ${MAVEN_SETTINGS_FILE+x} ]]; then
-	alias mvn="${PROJECT_PATH}/mvnw"
+	alias mvn="${PROJECT_PATH}/mvnw -Djava.net.useSystemProxies=true"
 	echo "[1m\$MAVEN_SETTINGS_FILE: [1m[31mWARNING: No global settings file found[0m"
 else
 	# Currently this is not working in case ${MAVEN_SETTINGS_FILE} is already in Windows format, it will be prefixed with "C;"
 	# MAVEN_SETTINGS_FILE=$(cygpath --path --windows ${MAVEN_SETTINGS_FILE})
-	alias mvn="${PROJECT_PATH}/mvnw -gs \"${MAVEN_SETTINGS_FILE}\""
+	alias mvn="${PROJECT_PATH}/mvnw -gs \"${MAVEN_SETTINGS_FILE}\" -Djava.net.useSystemProxies=true"
 	echo "[1m\$MAVEN_SETTINGS_FILE: ${MAVEN_SETTINGS_FILE}[0m"
 fi
 echo "[1mNo user settings file will be used, only global (using two settings files is incompatible with IntelliJ IDEA)[0m"

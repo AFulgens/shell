@@ -29,6 +29,9 @@ selectors="12345qwertasdfgzxcvb67890yuiophjkl;nm,.QWERTASDFGZXCVBYUIOPHJKL:NM<>?
 # TOOL CUSTOMIZATION #
 ######################
 
+# .bash_profile
+export GNUPG_HOME="C:/Program Files (x86)/GnuPG/bin"
+
 # rc-shellmagick.d/A20-idea-function-and-hook.sh
 export GLOBAL_IDEA_USE=1
 #export INTELLIJ_HOME=... # value used, defaulting to ${PATH_TOOLS}/idea
@@ -41,10 +44,10 @@ export GLOBAL_FORK_USE=1
 #export GLOBAL_FORK_DO_NOT_OVERRIDE=1 
 
 # rc-shellmagick.d/C11-global-mailmap.sh
-export GLOBAL_MAILMAP_PATH=${RC_SHELLMAGICK_ROOT_PATH}/${GIT_SUBPATH}/.mailmap
+export GLOBAL_MAILMAP_PATH=${PATH_TOOLS}/.mailmap
 
 # rc-shellmagick.d/P00-set-git.sh, ${APPDATA} is cygwin-ized %AppData%
-export GIT_HOME=$(cygpath --path --unix "${APPDATA}/../Local/Fork/gitInstance/2.39.1")
+#export GIT_HOME=$(cygpath --path --unix "${APPDATA}/../Local/Fork/gitInstance/2.42.0")
 
 # rc-shellmagick.d/P01-setup-java.sh
 if [[ ! -z ${JAVA_BASE+x} ]]; then
@@ -58,7 +61,9 @@ fi
 export SETUP_SPRING_BOOT=1
 
 # global-githooks/commit-msg
-#export COMMIT_SUBJECT_LINE_LENGTH=50 # value is used, default is 50
+# but even by default we can be a bit more relaxed https://stackoverflow.com/a/11993051/5471574
+# E.g., in case commit messages are prefixed with ticketing, 50 is VERY short
+export COMMIT_SUBJECT_LINE_LENGTH=65 # value is used, default is 50
 #export COMMIT_BODY_LINE_LENGTH=72 # value used, default is 72
 
 # global-githooks/pre-commit

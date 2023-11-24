@@ -25,8 +25,11 @@ alias mciskip='mvn clean install -DskipTests=true'
 
 alias mwasp='mvn dependency-check:check -Powasp-dependency-check'
 alias mtest='mvn test -Punit-tests'
+alias mteste='mvn test -Punit-tests ${EXTRA_MVN_TEST_ARGUMENTS}'
 alias mtestint='mvn verify -Pintegration-tests'
+alias mtestinte='mvn verify -Pintegration-tests ${EXTRA_MVN_TEST_ARGUMENTS}'
 alias mtestpit='mvn verify -Pmutation-tests org.pitest:pitest-maven:mutationCoverage'
+alias mtestpit='mvn verify -Pmutation-tests org.pitest:pitest-maven:mutationCoverage ${EXTRA_MVN_TEST_ARGUMENTS}'
 alias pitreport='cygstart target/pit-reports/index.html'
 
 alias mdown='mvn dependency:sources dependency:resolve'

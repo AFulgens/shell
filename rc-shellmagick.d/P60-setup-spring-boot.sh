@@ -14,9 +14,9 @@ fi
 
 echo "[2m[3mSetting up Spring-Boot[0m"
 
-alias sbl='sb local'
+if [[ -z ${SPRING_PROFILES_ACTIVE+x} ]]; then
+	echo -e "\t[2m[33mSkipping setup for Spring Boot (SPRING_PROFILES_ACTIVE not set)[0m"
+	return
+fi
 
-function sb {
-	mvn spring-boot:run -Dspring-boot.run.profiles=$1
-}
-FUNCTIONS[sb]="run Spring boot via maven with the profile given as parameter"
+alias sb="mvn spring-boot:run"

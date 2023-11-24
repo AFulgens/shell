@@ -25,14 +25,14 @@ if [[ -d ${INTELLIJ_BIN} ]]; then
 	FUNCTIONS[idea]="open current project in IntelliJ IDEA"
 
 	while true; do
-		printf >&2 "\tDo you want to start IntelliJ IDEA now for this project? (Y/n) "
+		printf >&2 "\tDo you want to start IntelliJ IDEA now for this project? (y/N) "
 		IFS= read -r start_idea
 
-		if [[ ${start_idea} =~ ^[nN]$ ]]; then
-			echo -e "[2m[3mNot starting IntelliJ IDEA[0m"
+		if [[ ${start_idea} =~ ^[yY]$ ]]; then
+			echo -e "[2m[3mStarting IntelliJ IDEA[0m"
 		else
-			if [[ ${start_idea} =~ ^[yY]?$ ]]; then
-				echo -e "[2m[3mStarting IntelliJ IDEA[0m"
+			if [[ ${start_idea} =~ ^[nN]?$ ]]; then
+				echo -e "[2m[3mNot starting IntelliJ IDEA[0m"
 				idea .
 			else
 				echo "This is a yes or no question!"

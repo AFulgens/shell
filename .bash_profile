@@ -65,7 +65,7 @@ PROMPT_COMMAND="history -a;rc1_prompt;$PROMPT_COMMAND"
 # Command line history takes surprisingly little amount of space.
 # With ignoring duplicates, 2**14 entries should be more than enough for a couple
 # months (or years) of work on the terminal.
-HISTCONTROL="ignoredups"
+HISTCONTROL=ignoreboth:erasedups
 HISTSIZE=16384
 
 # Enhance the default prompt by auto-adjusting title for the window based on PWD
@@ -116,6 +116,13 @@ case "`uname`" in
 		fi
 	;;
 esac
+
+# Use Gpg4win/GnuPG if installed instead of embedded gpg.exe
+if [[ -z ${GNUPG_HOME+x} ]]; then
+	if $cygwin || $mingw; then
+		export PATH=$(cygpath --path --unix "${GNUPG_HOME}"):$PATH
+	fi
+fi
 
 # Here one shouldn't use [[ ! -n ${VAR+x} ]] because on Windows it will cause
 # bad substitution erros, because of the backslashes...
