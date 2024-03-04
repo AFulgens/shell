@@ -1,3 +1,30 @@
+# Archival notice
+
+This repository is currently being archived step-wise. The content is being updated and migrated into the GitHub organization [ShellMagick](https://github.com/ShellMagick).
+
+This mostly in order to be able to modularize ShellMagick in a way that you can easily cherry-pick what you want and don't want to use from it; this has been the biggest hurdle in wider adoption within companies.
+
+After everything has been migrated, this repository will be converted into a public archive.
+
+Progress legend:
+
+❔ not yet decided _how_ to migrate exactly
+⚪ not started yet
+🕒 started
+🟢 finished
+💗 won't be migrated as it is
+
+Current progress:
+
+* ⚪ fork-commands
+* 🟢 global-githooks → [ShellMagick / commit-hooks](https://github.com/ShellMagick/commit-hooks)
+* ❔ maven
+* ⚪ rc-shellmagick.d
+  * incl. `.bash_profile`, `cygwin-bootstrap.cmd`, `rc-shellmagick.d-bootstrap.sh`, `rc-shallmagick.d.sh`
+* 💗 tests (new tests will be written in each respective repository)
+  * incl. `runtests.sh`
+* ❔ windows
+
 # shellmagick
 
 A collection of basic shell/CLI setup in my acquired taste.
